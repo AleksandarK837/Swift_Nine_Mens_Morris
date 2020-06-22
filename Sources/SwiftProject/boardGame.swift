@@ -1,8 +1,8 @@
 class BoardGame {
-    private var board: Board
+    var board: Board
 
-    private var player1 : Player
-    private var player2 : Player
+    var player1 : Player
+    var player2 : Player
 
     init() {
         board = Board()
@@ -30,7 +30,7 @@ class BoardGame {
         }
     }
 
-    private func isInMillPosition(coordinate: Coordinates, player: Player) -> Bool {
+    func isInMillPosition(coordinate: Coordinates, player: Player) -> Bool {
         for combination in board.millsCombination[coordinate]! {
             if board[combination[0]]!.player == player.player && board[combination[1]]!.player == player.player {
                 return true
@@ -62,7 +62,7 @@ class BoardGame {
         pos.removePlayerPiece()
     }
 
-    func movePiece(_ fromCoordinate: Coordinates, _ toCoordinate: Coordinates, _ player: Token) throws {
+    func movePiece(fromCoordinate: Coordinates, toCoordinate: Coordinates, player: Token) throws {
 
         guard let currentPos = board[fromCoordinate] else {
             throw gameError.non_existanceCurrentPosition(row: fromCoordinate.row, column: fromCoordinate.column)
@@ -72,6 +72,10 @@ class BoardGame {
             throw gameError.non_existanceFinalPosition(row: toCoordinate.row, column: toCoordinate.column)
         }
 
+        guard currentPos.hasPieceOn() else {
+            throw gameError.moveFromEmptyPosition(row: fromCoordinate.row, column: fromCoordinate.column)
+        }
+        
         let playerRef = (player == player1.player ? player1 : player2)
         
         if !playerRef.canFly {

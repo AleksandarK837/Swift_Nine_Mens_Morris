@@ -1,13 +1,11 @@
 class Player {
     public private(set) var canFly: Bool
     public private(set) var player: Token
-    private var numberPieces: Int
-    private var numberPiecesOnBoard: Int
+    public private(set) var numberPiecesOnBoard: Int
     
     init(player: Token) {
         canFly = false
         self.player = player
-        numberPieces = 9
         numberPiecesOnBoard = 0
     }
     

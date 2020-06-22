@@ -1,6 +1,6 @@
 class Board {
     private var positions: [Position]
-    internal let millsCombination = millCombination
+    let millsCombination = millCombination
 
     init() {
         positions = []
