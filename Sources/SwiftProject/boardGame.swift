@@ -114,7 +114,19 @@ class BoardGame {
         currentPlayerRef.removePieceOnBoard()
     }
 
-
+    func havePossibleMoves(player: Token) -> Bool {
+        for coordinate in coordArray {
+            if board[coordinate]!.player == player {
+                for adj in board[coordinate]!.adjacents {
+                    if board[adj]!.player == Token.NoPlayer {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+    
     func printBoard() {
         print("\(symbol(board[A1]!.player))-----------\(symbol(board[D1]!.player))-----------\(symbol(board[G1]!.player))")
         print("|           |           |")

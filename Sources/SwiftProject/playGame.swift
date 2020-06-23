@@ -101,6 +101,14 @@ class PlayGame {
             return .Player2_Winner
         } else if boardGame.player2.lostGame() {
             return .Player1_Winner
+        } else if currentPlayerTurn == .Player1 {
+            if !boardGame.havePossibleMoves(player: currentPlayerTurn) {
+                return .Player2_Winner
+            }
+        } else if currentPlayerTurn == .Player2 {
+            if !boardGame.havePossibleMoves(player: currentPlayerTurn) {
+                return .Player1_Winner
+            }
         } else if boardGame.player1.numberPiecesOnBoard == 3 && boardGame.player2.numberPiecesOnBoard == 3 {
             return .Tie_Result
         }
