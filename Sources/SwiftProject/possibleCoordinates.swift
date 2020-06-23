@@ -70,5 +70,6 @@ let millCombination: [Coordinates : [[Coordinates]]] =
                       E5 : [[D5, C5], [E3, E4]],
                       E4 : [[F4, G4], [E3, E5]],
                       E3 : [[D5, C5], [D3, C3]],
-                      D3 : [[D2, D1], [E3, C3]]]
+                      D3 : [[D2, D1], [E3, C3]],
+                      D5 : [[C5, E5], [D6, D7]]]
                  

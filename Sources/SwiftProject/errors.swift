@@ -5,5 +5,7 @@ enum gameError : Swift.Error {
     case removeEmptyPosition(row: Int, column: Character)
     case moveFromEmptyPosition(row: Int, column: Character)
     case cantFly(player: Token)
+    case takePieceFromMillPosition(row: Int, column: Character)
     case removeOwnPiece
+    case moveOponentsPiece
 }

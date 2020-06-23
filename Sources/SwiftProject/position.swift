@@ -1,9 +1,8 @@
 class Position {
-    
-    public private(set) var coordinate: Coordinates
-    public private(set) var player: Token
-    public private(set) var adjacents: [Coordinates]
-    internal var isOcupied: Bool
+    private(set) var coordinate: Coordinates
+    private(set) var player: Token
+    private(set) var adjacents: [Coordinates]
+    private(set) var isOcupied: Bool
 
     init(coordinate: Coordinates) {
         self.coordinate = coordinate
@@ -13,24 +12,24 @@ class Position {
         setAdjacents() 
     }
 
-    internal func hasPieceOn() -> Bool {
+    func hasPieceOn() -> Bool {
         if player == Token.NoPlayer {
             return false
         }
         return true
     }
 
-    public func setPlayerPiece(player: Token) {
+    func setPlayerPiece(player: Token) {
         self.player = player
         isOcupied = true
     }
 
-    public func removePlayerPiece() {
+    func removePlayerPiece() {
         self.player = Token.NoPlayer
         isOcupied = false
     }
 
-    public func isAdjacent(coordinate: Coordinates) -> Bool {
+    func isAdjacent(coordinate: Coordinates) -> Bool {
         for adj in adjacents {
             if adj == coordinate {
                 return true
@@ -38,6 +37,7 @@ class Position {
         }
         return false
     }
+    
     private func setAdjacents() {
         if coordinate == A1 {
             adjacents = [A4, D1]

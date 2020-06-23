@@ -1,8 +1,8 @@
 class BoardGame {
-    var board: Board
+    let board: Board
 
-    var player1 : Player
-    var player2 : Player
+    let player1 : Player
+    let player2 : Player
 
     init() {
         board = Board()
@@ -15,7 +15,7 @@ class BoardGame {
             throw gameError.non_existanceCurrentPosition(row: coordinate.row, column: coordinate.column)
         }
 
-        guard pos.hasPieceOn() == false else {
+        guard !pos.hasPieceOn() else {
             throw gameError.ocupiedPosition(row: coordinate.row, column: coordinate.column)
         }
 
@@ -30,36 +30,24 @@ class BoardGame {
         }
     }
 
-    func isInMillPosition(coordinate: Coordinates, player: Player) -> Bool {
+    func isInMillPosition(coordinate: Coordinates, player: Token) -> Bool {
         for combination in board.millsCombination[coordinate]! {
-            if board[combination[0]]!.player == player.player && board[combination[1]]!.player == player.player {
+            if board[combination[0]]!.player == player && board[combination[1]]!.player == player {
                 return true
             }
         }
         return false
     }
 
-    func removePiece(player: Token) throws {
-        print("Enter row coordinate: ")
-        let row = readLine()
-        print("Enter column coordinate: ")
-        let column = readLine()
-
-        let coordinate = Coordinates(row: Int(row!) ?? -1, column: Character(column!))
-
-        guard let pos = board[coordinate] else {
-            throw gameError.non_existanceCurrentPosition(row: coordinate.row, column: coordinate.column)
+    private func isInMillForEveryPosition(player: Token) -> Bool {
+        for coordinate in coordArray {
+            if board[coordinate]!.player == player {
+                if !isInMillPosition(coordinate: coordinate, player: player) {
+                    return false
+                }
+            }
         }
-
-        guard pos.hasPieceOn() == true else {
-            throw gameError.removeEmptyPosition(row: coordinate.row, column: coordinate.column)
-        }
-
-        guard pos.player != player else {
-            throw gameError.removeOwnPiece
-        }
-
-        pos.removePlayerPiece()
+        return true
     }
 
     func movePiece(fromCoordinate: Coordinates, toCoordinate: Coordinates, player: Token) throws {
@@ -75,6 +63,10 @@ class BoardGame {
         guard currentPos.hasPieceOn() else {
             throw gameError.moveFromEmptyPosition(row: fromCoordinate.row, column: fromCoordinate.column)
         }
+
+        guard currentPos.player == player else {
+            throw gameError.moveOponentsPiece
+        }
         
         let playerRef = (player == player1.player ? player1 : player2)
         
@@ -82,12 +74,12 @@ class BoardGame {
             guard currentPos.isAdjacent(coordinate: toCoordinate) else {
                 throw gameError.cantFly(player: playerRef.player)
             }
-            guard finalPos.hasPieceOn() == false else {
+            guard !finalPos.hasPieceOn() else {
                 throw gameError.ocupiedPosition(row: toCoordinate.row, column: toCoordinate.column) 
             }
         }
         else {
-            guard finalPos.hasPieceOn() == false else {
+            guard !finalPos.hasPieceOn() else {
                 throw gameError.ocupiedPosition(row: toCoordinate.row, column: toCoordinate.column) 
             }
         }
@@ -95,6 +87,33 @@ class BoardGame {
         currentPos.removePlayerPiece()
         finalPos.setPlayerPiece(player: playerRef.player)
     }
+
+    func removePiece(player: Token, coordinate: Coordinates) throws {
+        printBoard()
+        
+        guard let pos = board[coordinate] else {
+            throw gameError.non_existanceCurrentPosition(row: coordinate.row, column: coordinate.column)
+        }
+
+        guard pos.hasPieceOn() else {
+            throw gameError.removeEmptyPosition(row: coordinate.row, column: coordinate.column)
+        }
+
+        guard pos.player == player else {
+            throw gameError.removeOwnPiece
+        }
+
+        if isInMillPosition(coordinate: coordinate, player: player) {
+            guard isInMillForEveryPosition(player: player) else {
+                throw gameError.takePieceFromMillPosition(row: coordinate.row, column: coordinate.column)
+            }
+        }
+
+        pos.removePlayerPiece()
+        let currentPlayerRef = player == player1.player ? player1 : player2
+        currentPlayerRef.removePieceOnBoard()
+    }
+
 
     func printBoard() {
         print("\(symbol(board[A1]!.player))-----------\(symbol(board[D1]!.player))-----------\(symbol(board[G1]!.player))")
