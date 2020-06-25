@@ -71,6 +71,7 @@ class BoardGame {
         let playerRef = (player == player1.player ? player1 : player2)
         
         if !playerRef.canFly {
+            // if can't fly, move to adjacent empty position
             guard currentPos.isAdjacent(coordinate: toCoordinate) else {
                 throw gameError.cantFly(player: playerRef.player)
             }
@@ -79,6 +80,7 @@ class BoardGame {
             }
         }
         else {
+            // if can fly, ust move to empty position
             guard !finalPos.hasPieceOn() else {
                 throw gameError.ocupiedPosition(row: toCoordinate.row, column: toCoordinate.column) 
             }
@@ -103,6 +105,7 @@ class BoardGame {
             throw gameError.removeOwnPiece
         }
 
+        // we can remove piece from mill, if all player's piece are in mill
         if isInMillPosition(coordinate: coordinate, player: player) {
             guard isInMillForEveryPosition(player: player) else {
                 throw gameError.takePieceFromMillPosition(row: coordinate.row, column: coordinate.column)
@@ -128,19 +131,20 @@ class BoardGame {
     }
     
     func printBoard() {
-        print("\(symbol(board[A1]!.player))-----------\(symbol(board[D1]!.player))-----------\(symbol(board[G1]!.player))")
-        print("|           |           |")
-        print("|   \(symbol(board[B2]!.player))-------\(symbol(board[D2]!.player))-------\(symbol(board[F2]!.player))   |")
-        print("|   |       |       |   |")
-        print("|   |   \(symbol(board[C3]!.player))---\(symbol(board[D3]!.player))---\(symbol(board[E3]!.player))   |   |")
-        print("|   |   |       |   |   |")
-        print("\(symbol(board[A4]!.player))---\(symbol(board[B4]!.player))---\(symbol(board[C4]!.player))       \(symbol(board[E4]!.player))---\(symbol(board[F4]!.player))---\(symbol(board[G4]!.player))")
-        print("|   |   |       |   |   |")
-        print("|   |   \(symbol(board[C5]!.player))---\(symbol(board[D5]!.player))---\(symbol(board[E5]!.player))   |   |")
-        print("|   |       |       |   |")
-        print("|   \(symbol(board[B6]!.player))-------\(symbol(board[D6]!.player))-------\(symbol(board[F6]!.player))   |")
-        print("|           |           |")
-        print("\(symbol(board[A7]!.player))-----------\(symbol(board[D7]!.player))-----------\(symbol(board[G7]!.player))")
+        print("   A   B   C   D   E   F   G\n")
+        print("1  \(symbol(board[A1]!.player))-----------\(symbol(board[D1]!.player))-----------\(symbol(board[G1]!.player))")
+        print("   |           |           |")
+        print("2  |   \(symbol(board[B2]!.player))-------\(symbol(board[D2]!.player))-------\(symbol(board[F2]!.player))   |")
+        print("   |   |       |       |   |")
+        print("3  |   |   \(symbol(board[C3]!.player))---\(symbol(board[D3]!.player))---\(symbol(board[E3]!.player))   |   |")
+        print("   |   |   |       |   |   |")
+        print("4  \(symbol(board[A4]!.player))---\(symbol(board[B4]!.player))---\(symbol(board[C4]!.player))       \(symbol(board[E4]!.player))---\(symbol(board[F4]!.player))---\(symbol(board[G4]!.player))")
+        print("   |   |   |       |   |   |")
+        print("5  |   |   \(symbol(board[C5]!.player))---\(symbol(board[D5]!.player))---\(symbol(board[E5]!.player))   |   |")
+        print("   |   |       |       |   |")
+        print("6  |   \(symbol(board[B6]!.player))-------\(symbol(board[D6]!.player))-------\(symbol(board[F6]!.player))   |")
+        print("   |           |           |")
+        print("7  \(symbol(board[A7]!.player))-----------\(symbol(board[D7]!.player))-----------\(symbol(board[G7]!.player))")
     }
 
     private func symbol(_ player: Token) -> Character {
